@@ -1,4 +1,5 @@
-import "../css/index.css";
+// import "../css/index.css";
+import "tailwindcss/tailwind.css";
 import Head from "next/head";
 import Layout from "@components/layout";
 
