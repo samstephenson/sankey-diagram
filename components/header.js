@@ -1,7 +1,7 @@
-import Link from "next/link";
-import { useState } from "react";
-import cn from "classnames";
-import Image from "next/image";
+import cn from 'classnames';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
 
 export default function Header() {
   const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
@@ -41,13 +41,13 @@ export default function Header() {
 
         <ul
           className={cn(
-            "md:flex flex-col md:flex-row md:items-center md:justify-center text-sm w-full md:w-auto",
+            'md:flex flex-col md:flex-row md:items-center md:justify-center text-sm w-full md:w-auto',
             mobileMenuIsOpen ? `block` : `hidden`
           )}
         >
           {[
-            { title: "Home", route: "/" },
-            { title: "About", route: "/about" },
+            { title: 'Home', route: '/' },
+            { title: 'About', route: '/about' },
           ].map(({ route, title }) => (
             <li className="mt-3 md:mt-0 md:ml-6" key={title}>
               <Link href={route}>

@@ -11,7 +11,15 @@ export const colors = [
   'PaleTurqoise',
   'Aquamarine',
 ];
+
 export const randomColor = () => {
   const randomNumber = Math.floor(Math.random() * colors.length);
   return colors[randomNumber];
+};
+
+export const shiftHue = (previousHue, parentAmount, amount, index) => {
+  // Figure out share of hue to shift
+  const shareOfTotal = amount / parentAmount;
+  const hueToShift = 360 * shareOfTotal * (index + 1);
+  return previousHue + hueToShift;
 };

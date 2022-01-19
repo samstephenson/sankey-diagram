@@ -1,0 +1,59 @@
+{
+  "income": [
+    { "name": "salary", "amount": 8669 },
+    { "name": "wellbeing budget", "amount": 500 },
+    { "name": "pension contribution", "amount": 440 }
+  ],
+  "outgoings": [
+    {
+      "name": "Expenses",
+      "amount": 1445,
+      "children": [
+        {
+          "name": "Wellbeing budget",
+          "amount": 365,
+          "children": [
+            { "name": "Kat", "amount": 100 },
+            { "name": "Third Space", "amount": 210 }
+          ]
+        },
+        { "name": "Vanguard Pension", "amount": 960 },
+        {
+          "name": "Running expenses",
+          "amount": 120,
+          "children": [
+            { "name": "Phone", "amount": 15 },
+            { "name": "Adobe", "amount": 50 },
+            { "name": "Accountant", "amount": 55 }
+          ]
+        }
+      ]
+    },
+    { "name": "Tax", "amount": 3316 },
+
+    {
+      "name": "Monzo Personal",
+      "amount": 1800,
+      "children": [
+        {
+          "name": "joint-account",
+          "amount": 500,
+          "children": [
+            { "name": "utility-bill", "amount": 91 },
+            { "name": "groceries", "amount": 300 }
+          ]
+        },
+        { "name": "rent", "amount": 700 },
+        { "name": "Stillpoint yoga", "amount": 95 }
+      ]
+    },
+    {
+      "name": "Profits",
+      "amount": 4358,
+      "children": [
+        { "name": "Company savings", "amount": 2740 },
+        { "name": "LBC-donation", "amount": 51 }
+      ]
+    }
+  ]
+}
