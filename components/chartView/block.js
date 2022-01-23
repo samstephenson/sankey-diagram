@@ -11,6 +11,22 @@ export default function Block({ item, className = "", isIncome = false }) {
   const document = React.useContext(DocumentContext);
   const allItems = document.items.filter((x) => x.isIncome === isIncome);
 
+  const getChildren = (item, allItems) => {
+    if (!allItems) return [];
+
+    const children = item.id
+      ? allItems.filter((x) => x.childOf === item.id)
+      : getTopLevelOnly(allItems);
+    return children.sort((a, b) => b.amount - a.amount);
+  };
+
+  const getRemainder = (item) => {
+    const children = getChildren(item, allItems);
+    const childSum = children.length > 0 ? sumAmounts(children) : item.amount;
+    const remainder = item.amount - childSum;
+    return remainder > 0 ? remainder : null;
+  };
+
   const children = getChildren(item, allItems);
   const remainder = getRemainder(item);
 
@@ -57,18 +73,3 @@ export default function Block({ item, className = "", isIncome = false }) {
     </div>
   );
 }
-
-const getChildren = (item, allItems) => {
-  if (!allItems) return [];
-  const children = item.id
-    ? allItems.filter((x) => x.childOf === item.id)
-    : getTopLevelOnly(allItems);
-  return children.sort((a, b) => b.amount - a.amount);
-};
-
-const getRemainder = (item) => {
-  const childSum =
-    getChildren().length > 0 ? sumAmounts(getChildren()) : item.amount;
-  const remainder = item.amount - childSum;
-  return remainder > 0 ? remainder : null;
-};
