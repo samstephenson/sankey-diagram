@@ -18,10 +18,10 @@ export function getTopLevelOnly(tree) {
   return noParents;
 }
 
-export function getRandomItem() {
+export function getRandomItem(parentAmount = 1000) {
   const names = ["pizza", "sausages", "garlic"];
   const index = Math.floor(Math.random() * names.length);
-  const amount = Math.floor(Math.random() * 1000);
+  const amount = Math.floor(Math.random() * parentAmount);
   return {
     title: names[index],
     amount: amount,

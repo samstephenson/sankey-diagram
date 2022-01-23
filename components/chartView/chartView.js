@@ -29,7 +29,7 @@ export default function ChartView({ documentId }) {
           {income.map((item) => {
             return <Block item={item} isIncome key={item.id} />;
           })}
-          <button onClick={() => addItem(null, true)}>Add income</button>
+          {/* <button onClick={() => addItem(null, true)}>Add income</button> */}
         </ColumnContainer>
         <ColumnContainer>
           <Block
@@ -38,6 +38,7 @@ export default function ChartView({ documentId }) {
               amount: sumAmounts(income),
               id: null,
             }}
+            isReadOnly={true}
           />
         </ColumnContainer>
       </div>

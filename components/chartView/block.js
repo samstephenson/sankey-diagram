@@ -7,7 +7,12 @@ import BlockContent from "./blockContent";
 import ColumnContainer from "./columnContainer";
 import Remainder from "./remainderBlock";
 
-export default function Block({ item, className = "", isIncome = false }) {
+export default function Block({
+  item,
+  className = "",
+  isIncome = false,
+  isReadOnly = false,
+}) {
   const document = React.useContext(DocumentContext);
   const allItems = document.items.filter((x) => x.isIncome === isIncome);
 
@@ -24,7 +29,7 @@ export default function Block({ item, className = "", isIncome = false }) {
     const children = getChildren(item, allItems);
     const childSum = children.length > 0 ? sumAmounts(children) : item.amount;
     const remainder = item.amount - childSum;
-    return remainder > 0 ? remainder : null;
+    return remainder;
   };
 
   const children = getChildren(item, allItems);
@@ -39,7 +44,7 @@ export default function Block({ item, className = "", isIncome = false }) {
   const addChild = () => {
     add(
       {
-        ...getRandomItem(),
+        ...getRandomItem(item.amount),
         childOf: item.id ?? null,
         isIncome: isIncome,
       },
@@ -53,22 +58,24 @@ export default function Block({ item, className = "", isIncome = false }) {
       style={{
         flexGrow: item.amount,
       }}
+      onClick={() => console.log(children)}
     >
       <BlockContent
         item={item}
-        hasRemainder={remainder}
+        remainder={remainder}
         isIncome={isIncome}
         index={0}
         isOverBudget={false}
         handleAddChild={addChild}
         hasChildren={children.length > 0}
+        isReadOnly={isReadOnly}
       />
 
       <ColumnContainer>
         {children.map((child) => {
-          return <Block item={child} key={child.id} />;
+          return <Block item={child} key={child.id} isReadOnly={false} />;
         })}
-        {remainder && <Remainder amount={remainder} />}
+        {remainder > 0 && <Remainder amount={remainder} />}
       </ColumnContainer>
     </div>
   );
