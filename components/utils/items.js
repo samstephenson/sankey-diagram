@@ -5,13 +5,12 @@ export function hasChildren(item) {
 }
 
 export function sumAmounts(items) {
+  if (!items) return;
   const amounts = items.map((x) => x.amount);
-  if (amounts) {
+  if (amounts.length > 0) {
     const sumOfAmounts = amounts.reduce((a, b) => a + b);
     return sumOfAmounts;
-  } else {
-    return null;
-  }
+  } else return null;
 }
 
 export function getTopLevelOnly(tree) {

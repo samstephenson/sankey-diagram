@@ -1,5 +1,6 @@
 import React from "react";
 import { shiftHue } from "../utils/colors";
+import { deleteDoc } from "swr-firestore-v9";
 
 export default function BlockContent({
   item,
@@ -8,10 +9,13 @@ export default function BlockContent({
   hasRemainder = false,
   isIncome = false,
   isOverBudget,
-  handleDelete,
   hasChildren = false,
   handleAddChild,
 }) {
+  const handleDelete = () => {
+    deleteDoc(`documents/UEXue3UyAZM8SvFyBhZP/items/${item.id}`);
+  };
+
   return (
     <div
       className={`bg-gray-100 w-56 relative flex flex-col justify-center ${
@@ -28,7 +32,9 @@ export default function BlockContent({
       }}
     >
       <div className="absolute flex space-x-2 right-2 max-w-48 overflow-hidden">
-        <p className="truncate">{item.title}</p>
+        <p className="truncate" onClick={() => console.dir(item)}>
+          {item.title}
+        </p>
         <p>£{Math.round(item.amount)}</p>
         {item.id && (
           <button className="text-red-600" onClick={() => handleDelete(item)}>
