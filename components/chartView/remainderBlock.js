@@ -1,17 +1,18 @@
-import React from 'react';
+import { separator } from "@components/utils/formatters";
+import React from "react";
 
 export default function RemainderBlock({ amount }) {
   return (
     <div
-      className={`flex space-x-px items-stretch text-sm bg-none`}
+      className={`flex space-x-px items-stretch text-sm bg-none font-semibold ml-2`}
       style={{
         flexGrow: amount,
       }}
     >
       <div
-        className={`w-56 relative flex flex-col justify-center text-gray-400`}
+        className={`pt-1 w-56 relative flex flex-col justify-start text-gray-400`}
       >
-        <p>+£{Math.round(amount)}</p>
+        <p>£{separator(Math.round(amount))}</p>
       </div>
     </div>
   );

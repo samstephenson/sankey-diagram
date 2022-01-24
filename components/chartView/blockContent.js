@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { shiftHue } from "../utils/colors";
 import { deleteDoc, useDocument } from "swr-firestore-v9";
 import { DocumentContext } from "./documentContext";
+import { Plus, X } from "react-feather";
+import CircleButton from "../CircleButton";
 
 export default function BlockContent({
   item,
@@ -12,10 +14,9 @@ export default function BlockContent({
   isOverBudget,
   hasChildren = false,
   handleAddChild,
-  isReadOnly,
 }) {
-  const documentPath = `documents/UEXue3UyAZM8SvFyBhZP/items/${item.id}`;
   const docContext = React.useContext(DocumentContext);
+  const documentPath = `documents/${docContext.id}/items/${item.id}`;
   const handleDelete = () => {
     if (isIncome) {
       const incomeItems = docContext.items.filter((x) => x.isIncome === true);
@@ -23,10 +24,11 @@ export default function BlockContent({
     }
     deleteDoc(documentPath);
   };
+  const [isHovering, setIsHovering] = useState(false);
 
   const { update } = useDocument(documentPath);
   const handleUpdateValue = (type, value) => {
-    console.log("updating value to ", value);
+    console.log("updating value to ", type, value);
     if (!item.id) return; // Exclude 'all income' block
     if (type === "number")
       update({
@@ -39,85 +41,97 @@ export default function BlockContent({
       });
   };
 
+  const isCompact = item.amount < docContext.totalIncome / 10;
+
   return (
     <div
-      className={`bg-gray-100 w-56 p-2 group flex flex-col relative justify-between text-right items-end ${
-        isRemainder && "text-gray-400"
-      } ${isOverBudget && "text-red-600"}`}
-      style={{
-        textAlign: "right",
-        background: remainder >= 0 ? `hsla(${hue}, 80%, 70%, 1)` : `red`,
-        borderTopRightRadius: !isIncome && !hasChildren ? 32 : 0,
-        borderBottomRightRadius:
-          !isIncome && (!hasChildren || remainder > 0) ? 32 : 0,
-        borderTopLeftRadius: isIncome && 32,
-        borderBottomLeftRadius: isIncome && 32,
-      }}
+      className="relative flex items-stretch group"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
     >
-      <div className="max-w-48 overflow-hidden">
-        {isReadOnly ? (
-          <p className="font-semibold text-xl opacity-70 bg-blend-overlay text-black">
-            {item.title}
-          </p>
-        ) : (
+      <div
+        className={`bg-gray-100 w-56 overflow-hidden py-1 flex flex-col relative justify-between text-right items-end transition-all duration-100 ${
+          isRemainder && "text-gray-400"
+        } ${isOverBudget && "text-red-600"}`}
+        style={{
+          minHeight: 12,
+          textAlign: "right",
+          background:
+            remainder >= 0
+              ? `hsla(${hue}, 80%, 70%, ${isHovering ? 0.9 : 1})`
+              : `red`,
+          borderTopRightRadius: !isIncome && !hasChildren ? 1 : 0,
+          borderBottomRightRadius:
+            !isIncome && (!hasChildren || remainder > 0) ? 32 : 0,
+          borderTopLeftRadius: isIncome && 32,
+          borderBottomLeftRadius: isIncome && 32,
+        }}
+      >
+        <div
+          className={`max-w-48 absolute opacity-80`}
+          style={{
+            fontSize: isCompact ? 16 : 20,
+          }}
+        >
           <Input
             type="text"
             initialValue={item.title}
             handleBlur={handleUpdateValue}
+            className={"col-span-2"}
           />
-        )}
-        <p className="font-semibold text-xl opacity-70 bg-blend-overlay text-black">
-          {isReadOnly ? (
-            Math.round(item.amount)
-          ) : (
+
+          <p className="font-semibold bg-blend-overlay text-black grow">
             <Input
               type="number"
               initialValue={Math.round(item.amount)}
               handleBlur={handleUpdateValue}
+              className={isCompact && "w-16"}
             />
-          )}
-        </p>
+          </p>
+        </div>
       </div>
-      <div className="opacity-0 group-hover:opacity-100 absolute bottom-3 right-3 flex space-x-1">
-        {!isReadOnly && (
-          <button
-            className="text-red-600 bg-white w-8 h-8 rounded-full"
-            onClick={() => handleDelete(item)}
-          >
-            X
-          </button>
-        )}
+
+      <div className="opacity-0 group-hover:opacity-100 absolute top-1/2 -right-10 flex flex-col space-y-1 z-30 transform -translate-y-1/2">
+        <CircleButton color="red" onClick={() => handleDelete(item)}>
+          <X size={20} />
+        </CircleButton>
         {!isIncome && (
-          <button
-            className="text-green-600 bg-white w-8 h-8 rounded-full"
+          <CircleButton
+            color="green"
             onClick={() => handleAddChild(item.id, false)}
           >
-            +
-          </button>
+            <Plus size={20} />
+          </CircleButton>
         )}
       </div>
     </div>
   );
 }
 
-function Input({ initialValue, type, handleBlur }) {
+function Input({ initialValue, type, handleBlur, className }) {
   const [value, setValue] = useState(initialValue);
+  const [isHovering, setIsHovering] = useState(false);
 
   function onSubmit() {
     console.log("submitting", type, value);
     if (type === "number") handleBlur("number", value);
-    if (type === "text") handleBlur("title", value);
+    if (type === "text") handleBlur("text", value);
   }
 
   return (
     <input
       type={type}
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onBlur={() => onSubmit()}
-      className="bg-transparent font-semibold text-xl bg-blend-overlay text-black focus:opacity-70 min-w-12 w-full rounded outline-none px-1 text-right appearance-none m-0"
+      onClick={(e) => e.target.select()}
+      className={`bg-transparent font-semibold bg-blend-overlay text-black focus:opacity-70 min-w-12 w-full outline-none px-2 text-right m-0 ${className}`}
       style={{
-        marginRight: type === "number" && "-1rem",
+        // marginRight: type === "number" && "-1rem",
+        background: isHovering ? "rgba(0,0,0,0.1)" : "none",
+        appearance: "textfield",
       }}
     />
   );

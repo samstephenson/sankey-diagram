@@ -1,5 +1,9 @@
 import React from "react";
 
-export default function ColumnContainer({ children }) {
-  return <div className="flex flex-col space-y-px">{children}</div>;
+export default function ColumnContainer({ children, className = "" }) {
+  return (
+    <div className={`flex flex-col space-y-px relative ${className}`}>
+      {children}
+    </div>
+  );
 }

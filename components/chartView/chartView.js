@@ -4,14 +4,13 @@ import { getRandomItem, sumAmounts } from "../utils/items";
 import { DocumentContext } from "./documentContext";
 import Block from "./block";
 import ColumnContainer from "./columnContainer";
+import CircleButton from "@components/CircleButton";
+import { Plus } from "react-feather";
 
 export default function ChartView({ documentId }) {
-  const { data, update, error } = useCollection(
-    `documents/${documentId}/items`,
-    {
-      listen: true,
-    }
-  );
+  const { data, add, error } = useCollection(`documents/${documentId}/items`, {
+    listen: true,
+  });
   if (error) return <p>Error!</p>;
   if (!data) return <p>Loading...</p>;
 
@@ -22,14 +21,26 @@ export default function ChartView({ documentId }) {
       value={{
         id: documentId,
         items: data,
+        totalIncome: sumAmounts(income),
       }}
     >
-      <div className="flex" style={{ height: "80vh" }}>
-        <ColumnContainer>
+      <div className="flex flex-grow">
+        <ColumnContainer className="group">
           {income.map((item) => {
             return <Block item={item} isIncome key={item.id} />;
           })}
-          {/* <button onClick={() => addItem(null, true)}>Add income</button> */}
+          <CircleButton
+            color="green"
+            onClick={() =>
+              add({
+                ...getRandomItem(),
+                isIncome: true,
+              })
+            }
+            className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100"
+          >
+            <Plus size={20} />
+          </CircleButton>
         </ColumnContainer>
         <ColumnContainer>
           <Block

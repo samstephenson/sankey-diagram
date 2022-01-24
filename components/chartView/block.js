@@ -6,6 +6,9 @@ import { getRandomItem } from "../utils/items";
 import BlockContent from "./blockContent";
 import ColumnContainer from "./columnContainer";
 import Remainder from "./remainderBlock";
+import { Plus } from "react-feather";
+import { separator } from "@components/utils/formatters";
+import CircleButton from "@components/CircleButton";
 
 export default function Block({
   item,
@@ -54,22 +57,47 @@ export default function Block({
 
   return (
     <div
-      className={`flex space-x-px items-stretch text-sm ${className}`}
+      className={`flex space-x-px items-stretch min-h-8 text-sm ${className}`}
       style={{
-        flexGrow: item.amount,
+        flexGrow: item.amount === 0 || !item.amount ? 1 : item.amount,
       }}
       onClick={() => console.log(children)}
     >
-      <BlockContent
-        item={item}
-        remainder={remainder}
-        isIncome={isIncome}
-        index={0}
-        isOverBudget={false}
-        handleAddChild={addChild}
-        hasChildren={children.length > 0}
-        isReadOnly={isReadOnly}
-      />
+      {item.id ? (
+        <BlockContent
+          item={item}
+          remainder={remainder}
+          isIncome={isIncome}
+          index={0}
+          isOverBudget={false}
+          handleAddChild={addChild}
+          hasChildren={children.length > 0}
+        />
+      ) : (
+        <div
+          className="text-xl font-semibold p-2 bg-gray-200 relative w-12 group"
+          style={{
+            borderBottomRightRadius: remainder > 0 ? 32 : 0,
+          }}
+        >
+          <h2 className="transform rotate-90 origin-left inline-block absolute top-0 left-6 whitespace-nowrap">
+            £{separator(item.amount)} total
+          </h2>
+          <CircleButton
+            className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100"
+            color="green"
+            onClick={() =>
+              add({
+                ...getRandomItem(),
+                childOf: null,
+                isIncome: false,
+              })
+            }
+          >
+            <Plus size={20} />
+          </CircleButton>
+        </div>
+      )}
 
       <ColumnContainer>
         {children.map((child) => {

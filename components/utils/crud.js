@@ -1,13 +1,3 @@
-const fs = require('fs').promises;
+import { useDocument, useCollection } from "swr-firestore-v9";
 
-export async function readFile(fileName) {
-  const filePath = `../../data/${filePath}`;
-  try {
-    const data = await fs.readFile(filePath);
-    console.log(data.toString());
-  } catch (error) {
-    console.error(`Got an error trying to read the file: ${error.message}`);
-  }
-}
-
-// readFile(fileName);
+export function addItem(documentId, item) {}
