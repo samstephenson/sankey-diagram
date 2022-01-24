@@ -1,6 +1,3 @@
-import cn from "classnames";
-import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { useDocument } from "swr-firestore-v9";
 import { Plus, User } from "react-feather";

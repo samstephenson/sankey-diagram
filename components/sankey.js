@@ -1,12 +1,12 @@
-import React from 'react';
-import useSWR from 'swr';
-import { randomColor } from '../components/utils/colors';
-import { addUser } from '../data/firebase';
+import React from "react";
+import useSWR from "swr";
+import { randomColor } from "@components/utils/colors";
+import { addUser } from "../data/firebase";
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 function useData() {
-  return useSWR('/api/sam', fetcher);
+  return useSWR("/api/sam", fetcher);
 }
 
 export default function SankeyChart() {
@@ -39,7 +39,7 @@ export default function SankeyChart() {
   }
 
   return (
-    <div className="w-screen flex" style={{ height: '80vh' }}>
+    <div className="w-screen flex" style={{ height: "80vh" }}>
       <button onClick={() => addUser()}>Add</button>
       <ColumnContainer>
         {income.map((item) => (
@@ -48,7 +48,7 @@ export default function SankeyChart() {
       </ColumnContainer>
       <Block
         item={{
-          name: 'all income',
+          name: "all income",
           amount: sumAmounts(income.map((x) => x.amount)),
           children: fillInBlanks(outgoings),
         }}
@@ -60,7 +60,7 @@ export default function SankeyChart() {
 
 function Block({
   item,
-  className = '',
+  className = "",
   isRemainder = false,
   isIncome = false,
   index = 0,
@@ -104,7 +104,7 @@ function Block({
           })}
         {remainder > 0 && (
           <Block
-            item={{ name: 'remainder', amount: remainder }}
+            item={{ name: "remainder", amount: remainder }}
             color="none"
             isRemainder
           />
@@ -138,11 +138,11 @@ function BlockContent({
   return (
     <div
       className={`bg-gray-100 w-56 relative flex flex-col justify-center ${
-        isRemainder && 'text-gray-400'
-      } ${isOverBudget && 'text-red-600'}`}
+        isRemainder && "text-gray-400"
+      } ${isOverBudget && "text-red-600"}`}
       style={{
-        textAlign: isRemainder ? 'left' : 'right',
-        background: isRemainder ? 'none' : `hsla(${hue}, 80%, 70%, 1)`,
+        textAlign: isRemainder ? "left" : "right",
+        background: isRemainder ? "none" : `hsla(${hue}, 80%, 70%, 1)`,
         borderTopRightRadius: !isIncome && !hasChildren(item) ? 32 : 0,
         borderBottomRightRadius:
           !isIncome && (!hasChildren(item) || hasRemainder) ? 32 : 0,
