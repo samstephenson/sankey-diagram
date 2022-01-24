@@ -3,7 +3,7 @@ import { shiftHue } from "../utils/colors";
 import { deleteDoc, useDocument } from "swr-firestore-v9";
 import { DocumentContext } from "./documentContext";
 import { Plus, X } from "react-feather";
-import CircleButton from "../CircleButton";
+import CircleButton from "../circleButton";
 
 export default function BlockContent({
   item,

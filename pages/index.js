@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useCollection } from "swr-firestore-v9";
 import ChartView from "@components/chartView/chartView";
-import Header from "@components/Header";
+import Header from "@components/header";
 
 export default function IndexPage() {
   const documentId = "UEXue3UyAZM8SvFyBhZP";

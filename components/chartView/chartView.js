@@ -4,7 +4,7 @@ import { getRandomItem, sumAmounts } from "../utils/items";
 import { DocumentContext } from "./documentContext";
 import Block from "./block";
 import ColumnContainer from "./columnContainer";
-import CircleButton from "@components/CircleButton";
+import CircleButton from "@components/circleButton";
 import { Plus } from "react-feather";
 
 export default function ChartView({ documentId }) {

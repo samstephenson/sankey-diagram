@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDocument } from "swr-firestore-v9";
 import { Plus, User } from "react-feather";
-import CircleButton from "./CircleButton";
+import CircleButton from "./circleButton";
 
 export default function Header({
   documents,

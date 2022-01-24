@@ -8,7 +8,7 @@ import ColumnContainer from "./columnContainer";
 import Remainder from "./remainderBlock";
 import { Plus } from "react-feather";
 import { separator } from "@components/utils/formatters";
-import CircleButton from "@components/CircleButton";
+import CircleButton from "@components/circleButton";
 
 export default function Block({
   item,
