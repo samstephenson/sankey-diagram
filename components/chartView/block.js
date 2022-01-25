@@ -61,7 +61,6 @@ export default function Block({
       style={{
         flexGrow: item.amount === 0 || !item.amount ? 1 : item.amount,
       }}
-      onClick={() => console.log(children)}
     >
       {item.id ? (
         <BlockContent

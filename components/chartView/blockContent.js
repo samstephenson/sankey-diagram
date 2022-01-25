@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { shiftHue } from "../utils/colors";
 import { deleteDoc, useDocument } from "swr-firestore-v9";
 import { DocumentContext } from "./documentContext";
@@ -25,6 +25,12 @@ export default function BlockContent({
     deleteDoc(documentPath);
   };
   const [isHovering, setIsHovering] = useState(false);
+  const [height, setHeight] = useState(0);
+  const divRef = useRef(null);
+
+  useEffect(() => {
+    setHeight(divRef.current.clientHeight);
+  }, []);
 
   const { update } = useDocument(documentPath);
   const handleUpdateValue = (type, value) => {
@@ -41,18 +47,20 @@ export default function BlockContent({
       });
   };
 
-  const isCompact = item.amount < docContext.totalIncome / 10;
+  const isCompact = height < 50;
 
   return (
     <div
-      className="relative flex items-stretch group"
+      className="relative flex items-stretch group w-64"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
+      onClick={() => console.log("height: ", height)}
     >
       <div
-        className={`bg-gray-100 w-56 overflow-hidden py-1 flex flex-col relative justify-between text-right items-end transition-all duration-100 ${
+        className={`bg-gray-100 w-64 overflow-hidden py-1 flex flex-col absolute inset-0 justify-between text-right items-end transition-all duration-100 ${
           isRemainder && "text-gray-400"
         } ${isOverBudget && "text-red-600"}`}
+        ref={divRef}
         style={{
           minHeight: 12,
           textAlign: "right",
@@ -68,16 +76,15 @@ export default function BlockContent({
         }}
       >
         <div
-          className={`max-w-48 absolute opacity-80`}
-          style={{
-            fontSize: isCompact ? 16 : 20,
-          }}
+          className={`max-w-56 text-xl grid grid-cols-4 opacity-80 ${
+            !isHovering && isCompact && "hidden"
+          }`}
         >
           <Input
             type="text"
             initialValue={item.title}
             handleBlur={handleUpdateValue}
-            className={"col-span-2"}
+            className={"col-span-3"}
           />
 
           <p className="font-semibold bg-blend-overlay text-black grow">
@@ -85,7 +92,6 @@ export default function BlockContent({
               type="number"
               initialValue={Math.round(item.amount)}
               handleBlur={handleUpdateValue}
-              className={isCompact && "w-16"}
             />
           </p>
         </div>

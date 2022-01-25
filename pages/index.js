@@ -4,7 +4,6 @@ import ChartView from "@components/chartView/chartView";
 import Header from "@components/header";
 
 export default function IndexPage() {
-  const documentId = "UEXue3UyAZM8SvFyBhZP";
   const userId = "1wWcVVtzSUguRNZtAgqy";
   const [activeDoc, setActiveDoc] = useState(null);
 
