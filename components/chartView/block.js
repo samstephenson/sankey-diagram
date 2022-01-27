@@ -55,11 +55,18 @@ export default function Block({
     );
   };
 
+  function howMuchToGrow() {
+    if (item.isLocked) return 0;
+    if (item.amount === 0 || !item.amount) return 1;
+    return item.amount;
+  }
+
   return (
     <div
-      className={`flex space-x-px items-stretch min-h-8 text-sm ${className}`}
+      className={`flex space-x-px flex-shrink-0 items-stretch min-h-8 text-sm ${className}`}
       style={{
-        flexGrow: item.amount === 0 || !item.amount ? 1 : item.amount,
+        flexGrow: howMuchToGrow(),
+        minHeight: 40,
       }}
     >
       {item.id ? (

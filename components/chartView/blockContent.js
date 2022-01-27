@@ -47,32 +47,32 @@ export default function BlockContent({
       });
   };
 
-  const isCompact = height < 50;
+  const isCompact = height < 40;
+
+  function decideColor() {
+    if (remainder < 0) return "red";
+    if (item.isLocked) return "#ccc";
+    return `hsla(${hue}, 80%, 70%, ${isHovering ? 0.9 : 1})`;
+  }
 
   return (
     <div
-      className="relative flex items-stretch group w-64"
+      className="relative flex items-stretch group w-72"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       onClick={() => console.log("height: ", height)}
     >
       <div
-        className={`bg-gray-100 w-64 overflow-hidden py-1 flex flex-col absolute inset-0 justify-between text-right items-end transition-all duration-100 ${
+        className={`bg-gray-100 w-72 overflow-hidden py-1 flex flex-col absolute inset-0 justify-between text-right items-end transition-all duration-100 ${
           isRemainder && "text-gray-400"
         } ${isOverBudget && "text-red-600"}`}
         ref={divRef}
         style={{
           minHeight: 12,
-          textAlign: "right",
-          background:
-            remainder >= 0
-              ? `hsla(${hue}, 80%, 70%, ${isHovering ? 0.9 : 1})`
-              : `red`,
+          background: decideColor(),
           borderTopRightRadius: !isIncome && !hasChildren ? 1 : 0,
           borderBottomRightRadius:
             !isIncome && (!hasChildren || remainder > 0) ? 32 : 0,
-          borderTopLeftRadius: isIncome && 32,
-          borderBottomLeftRadius: isIncome && 32,
         }}
       >
         <div
@@ -84,7 +84,7 @@ export default function BlockContent({
             type="text"
             initialValue={item.title}
             handleBlur={handleUpdateValue}
-            className={"col-span-3"}
+            className={`col-span-3 ${item.isLocked && "text-gray-500"}`}
           />
 
           <p className="font-semibold bg-blend-overlay text-black grow">
@@ -92,9 +92,16 @@ export default function BlockContent({
               type="number"
               initialValue={Math.round(item.amount)}
               handleBlur={handleUpdateValue}
+              className={`${item.isLocked && "text-gray-500"}`}
             />
           </p>
         </div>
+        <button
+          className="absolute left-1 top-1 opacity-0 group-hover:opacity-100"
+          onClick={() => update({ isLocked: !item.isLocked ?? false })}
+        >
+          Lock
+        </button>
       </div>
 
       <div className="opacity-0 group-hover:opacity-100 absolute top-1/2 -right-10 flex flex-col space-y-1 z-30 transform -translate-y-1/2">
