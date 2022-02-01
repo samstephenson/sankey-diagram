@@ -1,25 +1,11 @@
-export const colors = [
-  'LightSalmon',
-  'LemonChiffon',
-  'Moccasin',
-  'Khaki',
-  'DarkKhaki',
-  'Thistle',
-  'Plum',
-  'PaleGreen',
-  'MediumAquamarine',
-  'PaleTurqoise',
-  'Aquamarine',
-];
-
 export const randomColor = () => {
   const randomNumber = Math.floor(Math.random() * colors.length);
   return colors[randomNumber];
 };
 
-export const shiftHue = (previousHue, parentAmount, amount, index) => {
+export const shiftHue = (parentAmount, index, depth) => {
   // Figure out share of hue to shift
-  const shareOfTotal = amount / parentAmount;
-  const hueToShift = 360 * shareOfTotal * (index + 1);
-  return previousHue + hueToShift;
+  const multiplier = 20 / (depth + 1);
+  const newHue = parentAmount + index * multiplier;
+  return newHue;
 };

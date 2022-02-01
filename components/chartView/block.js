@@ -1,5 +1,6 @@
 import React from "react";
 import { useCollection } from "swr-firestore-v9";
+import { shiftHue } from "../utils/colors";
 import { getTopLevelOnly, sumAmounts } from "../utils/items";
 import { DocumentContext } from "./documentContext";
 import { getRandomItem } from "../utils/items";
@@ -14,7 +15,7 @@ export default function Block({
   item,
   className = "",
   isIncome = false,
-  isReadOnly = false,
+  hue = 0,
 }) {
   const document = React.useContext(DocumentContext);
   const allItems = document.items.filter((x) => x.isIncome === isIncome);
@@ -44,6 +45,18 @@ export default function Block({
   if (error) return <p>Error!</p>;
   if (!data) return <p>Loading...</p>;
 
+  const getDepth = () => {
+    let depth = 0;
+    let itemToCheck = item;
+    const getParent = (itemToCheck) =>
+      data.find((x) => x.id === itemToCheck.childOf);
+    while (getParent(itemToCheck)) {
+      depth++;
+      itemToCheck = getParent(itemToCheck);
+    }
+    return depth;
+  };
+
   const addChild = () => {
     add(
       {
@@ -66,7 +79,6 @@ export default function Block({
       className={`flex space-x-px flex-shrink-0 items-stretch min-h-8 text-sm ${className}`}
       style={{
         flexGrow: howMuchToGrow(),
-        minHeight: 40,
       }}
     >
       {item.id ? (
@@ -74,6 +86,7 @@ export default function Block({
           item={item}
           remainder={remainder}
           isIncome={isIncome}
+          hue={hue}
           index={0}
           isOverBudget={false}
           handleAddChild={addChild}
@@ -106,8 +119,16 @@ export default function Block({
       )}
 
       <ColumnContainer>
-        {children.map((child) => {
-          return <Block item={child} key={child.id} isReadOnly={false} />;
+        {children.map((child, i) => {
+          return (
+            <Block
+              hue={shiftHue(hue, i, getDepth())}
+              item={child}
+              key={child.id}
+              isReadOnly={false}
+              index={i}
+            />
+          );
         })}
         {remainder > 0 && <Remainder amount={remainder} />}
       </ColumnContainer>

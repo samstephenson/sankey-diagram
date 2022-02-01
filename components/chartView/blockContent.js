@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { shiftHue } from "../utils/colors";
+
 import { deleteDoc, useDocument } from "swr-firestore-v9";
 import { DocumentContext } from "./documentContext";
 import { Plus, X } from "react-feather";
@@ -7,12 +7,12 @@ import CircleButton from "../circleButton";
 
 export default function BlockContent({
   item,
-  hue = shiftHue(0, 4000, item.amount, 0),
   isRemainder = false,
   remainder = null,
   isIncome = false,
   isOverBudget,
   hasChildren = false,
+  hue = 0,
   handleAddChild,
 }) {
   const docContext = React.useContext(DocumentContext);
@@ -68,7 +68,7 @@ export default function BlockContent({
         } ${isOverBudget && "text-red-600"}`}
         ref={divRef}
         style={{
-          minHeight: 12,
+          minHeight: 44,
           background: decideColor(),
           borderTopRightRadius: !isIncome && !hasChildren ? 1 : 0,
           borderBottomRightRadius:
@@ -100,7 +100,7 @@ export default function BlockContent({
           className="absolute left-1 top-1 opacity-0 group-hover:opacity-100"
           onClick={() => update({ isLocked: !item.isLocked ?? false })}
         >
-          Lock
+          {hue}
         </button>
       </div>
 
