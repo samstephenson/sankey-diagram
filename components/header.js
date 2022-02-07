@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useDocument } from "swr-firestore-v9";
-import { ChevronDown, Menu, Plus, User } from "react-feather";
+import { useDocument, deleteDoc } from "swr-firestore-v9";
+import { ChevronDown, Menu, Plus, Trash, Trash2, User } from "react-feather";
 import CircleButton from "./circleButton";
 import { Dropdown, DropdownItem } from "./Dropdown";
+import { deleteDocument } from "@nandorojo/swr-firestore";
 
 export default function Header({
   documents,
@@ -39,6 +40,17 @@ export default function Header({
                     setActiveDoc(doc);
                   }}
                   isActive={isActive}
+                  action={
+                    <button
+                      onClick={() => {
+                        console.log("trying to delete", doc.title);
+                        deleteDoc(`documents/${doc.id}`);
+                      }}
+                      className="group p-1"
+                    >
+                      <Trash2 size={16} className="group-hover:text-red-500" />
+                    </button>
+                  }
                 />
               );
             })}

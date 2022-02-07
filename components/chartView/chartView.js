@@ -40,7 +40,7 @@ export default function ChartView({ documentId }) {
       }}
     >
       <div className="flex flex-grow">
-        <ColumnContainer className="group">
+        <ColumnContainer className="group" heading="In">
           {income.map((item) => {
             return <Block item={item} isIncome key={item.id} />;
           })}
@@ -57,7 +57,7 @@ export default function ChartView({ documentId }) {
             <Plus size={20} />
           </CircleButton>
         </ColumnContainer>
-        <ColumnContainer>
+        <ColumnContainer heading="Out" headingMargin>
           <Block
             item={{
               title: "all income",

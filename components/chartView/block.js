@@ -25,6 +25,8 @@ export default function Block({
 }) {
   const document = React.useContext(DocumentContext);
   const allItems = document.items.filter((x) => x.isIncome === isIncome);
+  const isMultipleIncomes =
+    document.items.filter((x) => x.isIncome === true).length > 1;
 
   const children = getChildren(item, allItems);
   const hasChildren = children.length > 0;
@@ -84,29 +86,31 @@ export default function Block({
           hasChildren={hasChildren}
         />
       ) : (
-        <div
-          className="text-xl font-semibold p-2 bg-gray-200 relative w-12 group"
-          style={{
-            borderBottomRightRadius: remainder > 0 ? 32 : 0,
-          }}
-        >
-          <h2 className="transform rotate-90 origin-left inline-block absolute top-0 left-6 whitespace-nowrap">
-            £{separator(item.amount)} total
-          </h2>
-          <CircleButton
-            className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100"
-            color="green"
-            onClick={() =>
-              add({
-                ...getRandomItem(),
-                childOf: null,
-                isIncome: false,
-              })
-            }
+        isMultipleIncomes && (
+          <div
+            className="text-xl font-semibold p-2 bg-gray-200 relative w-12 group mr-2"
+            style={{
+              borderBottomRightRadius: remainder > 0 ? 32 : 0,
+            }}
           >
-            <Plus size={20} />
-          </CircleButton>
-        </div>
+            <h2 className="transform rotate-90 origin-left inline-block absolute -top-1 left-6 whitespace-nowrap">
+              £{separator(item.amount)} total
+            </h2>
+            <CircleButton
+              className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100"
+              color="green"
+              onClick={() =>
+                add({
+                  ...getRandomItem(),
+                  childOf: null,
+                  isIncome: false,
+                })
+              }
+            >
+              <Plus size={20} />
+            </CircleButton>
+          </div>
+        )
       )}
 
       <ColumnContainer>

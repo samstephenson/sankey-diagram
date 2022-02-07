@@ -22,7 +22,7 @@ export function Dropdown({ children, onClickOutside }) {
   }
   return (
     <div
-      className="absolute left-0 top-10 bg-white shadow-xl rounded flex flex-col justify-start z-50 w-80"
+      className="absolute left-0 top-10 bg-white shadow-xl rounded flex flex-col justify-start pb-2 z-50 w-80"
       ref={wrapperRef}
     >
       {children}
@@ -30,16 +30,22 @@ export function Dropdown({ children, onClickOutside }) {
   );
 }
 
-export function DropdownItem({ onClick, doc, isActive = false }) {
+export function DropdownItem({
+  onClick,
+  doc,
+  isActive = false,
+  action = <></>,
+}) {
   return (
     <button
-      className={`px-4 py-1 hover:bg-gray-100 w-full text-left ${
+      className={`px-4 py-1 hover:bg-gray-100 w-full  flex justify-between text-left ${
         isActive && "text-gray-400"
       }`}
       onClick={onClick}
       disabled={isActive}
     >
       {doc.title !== "" ? doc.title : "No name"}
+      {action}
     </button>
   );
 }
