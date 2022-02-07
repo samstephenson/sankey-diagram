@@ -25,11 +25,11 @@ export default function IndexPage() {
     <>
       <Header
         documents={data}
-        activeDoc={activeDoc}
+        activeDoc={activeDoc ? data.find((x) => activeDoc.id === x.id) : null}
         setActiveDoc={setActiveDoc}
         createDoc={createDoc}
       />
-      {activeDoc && <ChartView activeDoc={activeDoc} />}
+      {activeDoc && <ChartView doc={activeDoc} />}
     </>
   );
 }

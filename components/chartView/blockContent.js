@@ -69,9 +69,17 @@ export default function BlockContent({
   const isCompact = height < 40;
 
   function decideColor() {
+    if (isIncome) return "#ccc";
     if (remainder < 0) return "red";
     if (item.isLocked) return "#ccc";
     return `hsla(${hue}, 80%, 70%, ${isHovering ? 0.9 : 1})`;
+  }
+
+  function decideShouldRoundBottomCorner() {
+    if (isIncome) return true;
+    if (!hasChildren) return true;
+    if (remainder > 0) return true;
+    return false;
   }
 
   return (
@@ -93,8 +101,7 @@ export default function BlockContent({
           minHeight: 44,
           background: decideColor(),
           borderTopRightRadius: !isIncome && !hasChildren ? 1 : 0,
-          borderBottomRightRadius:
-            !isIncome && (!hasChildren || remainder > 0) ? 32 : 0,
+          borderBottomRightRadius: decideShouldRoundBottomCorner() ? 32 : 0,
         }}
       >
         <div

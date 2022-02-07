@@ -12,6 +12,7 @@ export default function Header({
   createDoc,
 }) {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [showSymbolPicker, setShowSymbolPicker] = useState(false);
 
   return (
     <header className="py-4 flex justify-between items-center ">
@@ -57,8 +58,27 @@ export default function Header({
           </Dropdown>
         )}
       </div>
-      <div className="w-10 h-10 rounded-full bg-gray-200 grid place-items-center text-gray-400">
-        <User size={20} />
+      <div className="flex space-x-2 items-center relative">
+        {activeDoc && (
+          <>
+            <button
+              onClick={() => setShowSymbolPicker(true)}
+              className="px-2 py-1 font-medium flex items-center text-xl space-x-2 text-gray-700 hover:bg-gray-100 rounded"
+            >
+              {activeDoc.symbol ?? "~"}
+              <ChevronDown size={20} className="text-gray-500" />
+            </button>
+            {showSymbolPicker && (
+              <SymbolDropdown
+                doc={activeDoc}
+                hideSelf={() => setShowSymbolPicker(false)}
+              />
+            )}
+          </>
+        )}
+        <div className="w-10 h-10 rounded-full bg-gray-200 grid place-items-center text-gray-400">
+          <User size={20} />
+        </div>
       </div>
     </header>
   );
@@ -71,6 +91,7 @@ function FileName({ doc }) {
 
   useEffect(() => {
     setInputValue(doc.title);
+    setIsEditing(false);
   }, [doc]);
 
   function handleSubmit(e) {
@@ -107,3 +128,26 @@ function FileName({ doc }) {
     </div>
   );
 }
+
+function SymbolDropdown({ hideSelf, doc }) {
+  const { update } = useDocument(`documents/${doc.id}`);
+
+  return (
+    <Dropdown onClickOutside={hideSelf} className="right-0 left-auto w-24">
+      {symbols.map((symbol) => (
+        <p
+          onClick={() =>
+            update({
+              symbol: symbol,
+            })
+          }
+          className="px-4 py-2 hover:bg-gray-100 w-full cursor-pointer"
+        >
+          {symbol}
+        </p>
+      ))}
+    </Dropdown>
+  );
+}
+
+const symbols = ["£", "$", "€"];

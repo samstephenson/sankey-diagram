@@ -2,8 +2,6 @@ import React from "react";
 import { useCollection } from "swr-firestore-v9";
 import { shiftHue } from "../utils/colors";
 import {
-  getTopLevelOnly,
-  sumAmounts,
   getChildren,
   getRemainder,
 } from "../utils/items";
@@ -12,9 +10,7 @@ import { getRandomItem } from "../utils/items";
 import BlockContent from "./blockContent";
 import ColumnContainer from "./columnContainer";
 import Remainder from "./remainderBlock";
-import { Plus } from "react-feather";
-import { separator } from "@components/utils/formatters";
-import CircleButton from "@components/circleButton";
+import DoucmentCurrencySymbol from "./DocumentCurrencySymbol";
 
 export default function Block({
   item,
@@ -74,7 +70,7 @@ export default function Block({
         flexGrow: howMuchToGrow(),
       }}
     >
-      {item.id ? (
+      {item.id && (
         <BlockContent
           item={item}
           remainder={remainder}
@@ -85,32 +81,6 @@ export default function Block({
           handleAddChild={addChild}
           hasChildren={hasChildren}
         />
-      ) : (
-        isMultipleIncomes && (
-          <div
-            className="text-xl font-semibold p-2 bg-gray-200 relative w-12 group mr-2"
-            style={{
-              borderBottomRightRadius: remainder > 0 ? 32 : 0,
-            }}
-          >
-            <h2 className="transform rotate-90 origin-left inline-block absolute -top-1 left-6 whitespace-nowrap">
-              £{separator(item.amount)} total
-            </h2>
-            <CircleButton
-              className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100"
-              color="green"
-              onClick={() =>
-                add({
-                  ...getRandomItem(),
-                  childOf: null,
-                  isIncome: false,
-                })
-              }
-            >
-              <Plus size={20} />
-            </CircleButton>
-          </div>
-        )
       )}
 
       <ColumnContainer>
@@ -125,7 +95,9 @@ export default function Block({
             />
           );
         })}
-        {remainder > 0 && <Remainder amount={remainder} />}
+        {remainder > 0 && (
+          <Remainder symbol={<DoucmentCurrencySymbol />} amount={remainder} />
+        )}
       </ColumnContainer>
     </div>
   );

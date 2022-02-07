@@ -7,8 +7,9 @@ import ColumnContainer from "./columnContainer";
 import CircleButton from "@components/circleButton";
 import { Plus } from "react-feather";
 
-export default function ChartView({ documentId }) {
-  const { data, add, error } = useCollection(`documents/${documentId}/items`, {
+export default function ChartView({ doc }) {
+  if (!doc) return <p>Loading…</p>;
+  const { data, add, error } = useCollection(`documents/${doc.id}/items`, {
     listen: true,
   });
   if (error) return <p>Error!</p>;
@@ -30,17 +31,24 @@ export default function ChartView({ documentId }) {
   }
 
   const income = data.filter((item) => item.isIncome);
+  const totalOutgoings = sumAmounts(
+    data.filter((item) => !item.isIncome && !item.childOf)
+  );
 
   return (
     <DocumentContext.Provider
       value={{
-        id: documentId,
+        id: doc.id,
         items: data,
         totalIncome: sumAmounts(income),
+        symbol: doc.symbol ?? "£",
       }}
     >
       <div className="flex flex-grow">
-        <ColumnContainer className="group" heading="In">
+        <ColumnContainer
+          className="group mr-2"
+          heading={`${doc.symbol ?? "£"}${sumAmounts(income) ?? 0} in`}
+        >
           {income.map((item) => {
             return <Block item={item} isIncome key={item.id} />;
           })}
@@ -57,7 +65,9 @@ export default function ChartView({ documentId }) {
             <Plus size={20} />
           </CircleButton>
         </ColumnContainer>
-        <ColumnContainer heading="Out" headingMargin>
+        <ColumnContainer
+          heading={`${doc.symbol ?? "£"}${totalOutgoings ?? 0} out`}
+        >
           <Block
             item={{
               title: "all income",

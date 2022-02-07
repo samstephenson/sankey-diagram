@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 
-export function Dropdown({ children, onClickOutside }) {
+export function Dropdown({ children, onClickOutside, className = "" }) {
   const wrapperRef = useRef(null);
   useOutsideAlerter(wrapperRef);
 
@@ -22,7 +22,7 @@ export function Dropdown({ children, onClickOutside }) {
   }
   return (
     <div
-      className="absolute left-0 top-10 bg-white shadow-xl rounded flex flex-col justify-start pb-2 z-50 w-80"
+      className={`absolute left-0 top-10 bg-white shadow-xl rounded flex flex-col justify-start pb-2 z-50 w-80 ${className}`}
       ref={wrapperRef}
     >
       {children}
