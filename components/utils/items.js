@@ -28,3 +28,19 @@ export function getRandomItem(parentAmount = 1000) {
     id: uuidv4(),
   };
 }
+
+export const getChildren = (item, allItems) => {
+  if (!allItems) return [];
+
+  const children = item.id
+    ? allItems.filter((x) => x.childOf === item.id)
+    : getTopLevelOnly(allItems);
+  return children.sort((a, b) => b.amount - a.amount);
+};
+
+export const getRemainder = (item, allItems) => {
+  const children = getChildren(item, allItems);
+  const childSum = children.length > 0 ? sumAmounts(children) : item.amount;
+  const remainder = item.amount - childSum;
+  return remainder;
+};

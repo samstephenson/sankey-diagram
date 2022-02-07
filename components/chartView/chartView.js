@@ -14,6 +14,21 @@ export default function ChartView({ documentId }) {
   if (error) return <p>Error!</p>;
   if (!data) return <p>Loading...</p>;
 
+  console.log("items: ", data);
+
+  if (data.length === 0) {
+    add(
+      {
+        title: "My income",
+        amount: 100,
+        id: "1",
+        childOf: null,
+        isIncome: true,
+      },
+      { merge: true }
+    );
+  }
+
   const income = data.filter((item) => item.isIncome);
 
   return (

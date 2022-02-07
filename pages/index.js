@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCollection } from "swr-firestore-v9";
 import ChartView from "@components/chartView/chartView";
 import Header from "@components/header";
+import { getRandomItem } from "@components/utils/items";
 
 export default function IndexPage() {
   const userId = "1wWcVVtzSUguRNZtAgqy";
