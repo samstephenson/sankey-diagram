@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDocument } from "swr-firestore-v9";
-import { Plus, User } from "react-feather";
+import { ChevronDown, Menu, Plus, User } from "react-feather";
 import CircleButton from "./circleButton";
+import { Dropdown, DropdownItem } from "./Dropdown";
 
 export default function Header({
   documents,
@@ -9,22 +10,40 @@ export default function Header({
   setActiveDoc,
   createDoc,
 }) {
+  const [showDropdown, setShowDropdown] = useState(false);
+
   return (
     <header className="py-4 flex justify-between items-center ">
-      <h1 className="font-semibold text-gray-400">MapMyMoney</h1>
-      <div className="flex space-x-4">
-        {documents.map((doc) => {
-          return (
-            <FileTab
-              doc={doc}
-              onClick={() => setActiveDoc(doc.id)}
-              isActive={activeDoc === doc.id}
-            />
-          );
-        })}
-        <CircleButton onClick={() => createDoc()}>
-          <Plus size={20} />
+      <div className="flex rounded items-center space-x-2 font-semibold relative">
+        <CircleButton onClick={() => setShowDropdown(!showDropdown)}>
+          <Menu size={20} className="text-gray-400" />
         </CircleButton>
+        <h1>{activeDoc ? <FileName doc={activeDoc} /> : "No doc selected"}</h1>
+        {showDropdown && (
+          <Dropdown onClickOutside={() => setShowDropdown(false)}>
+            <div className="flex justify-between items-center px-4 py-2 ">
+              <h2 className="font-semibold uppercase text-xs tracking-wide text-gray-500">
+                Documents
+              </h2>
+              <CircleButton onClick={() => createDoc()}>
+                <Plus size={20} />
+              </CircleButton>
+            </div>
+            {documents.map((doc) => {
+              const isActive = activeDoc && activeDoc.id === doc.id;
+              return (
+                <DropdownItem
+                  doc={doc}
+                  onClick={() => {
+                    setShowDropdown(false);
+                    setActiveDoc(doc);
+                  }}
+                  isActive={isActive}
+                />
+              );
+            })}
+          </Dropdown>
+        )}
       </div>
       <div className="w-10 h-10 rounded-full bg-gray-200 grid place-items-center text-gray-400">
         <User size={20} />
@@ -33,38 +52,46 @@ export default function Header({
   );
 }
 
-function FileTab({ onClick, doc, isActive = false }) {
+function FileName({ doc }) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(doc.title);
-
   const { update } = useDocument(`documents/${doc.id}`);
 
-  function handleSubmit() {
+  useEffect(() => {
+    setInputValue(doc.title);
+  }, [doc]);
+
+  function handleSubmit(e) {
+    e.preventDefault();
     setIsEditing(false);
+    if (inputValue === "") setInputValue("Untitled Document");
     update({
       title: inputValue,
     });
   }
 
   return (
-    <button
-      className={`font-semibold text-center ${!isActive && "text-gray-400"}`}
-      onClick={onClick}
-      onDoubleClick={() => setIsEditing(true)}
+    <div
+      className={`px-2 py-1 hover:bg-gray-100 text-left font-semibold ${
+        isEditing ? "outline" : ""
+      }`}
+      onClick={() => setIsEditing(true)}
     >
       {isEditing ? (
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          onFocus={(e) => e.target.select()}
-          onBlur={() => handleSubmit()}
-          onSubmit={() => handleSubmit()}
-          className="text-center"
-        />
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onFocus={(e) => e.target.select()}
+            onBlur={handleSubmit}
+            onClick={(e) => e.target.select()}
+            onSubmit={handleSubmit}
+          />
+        </form>
       ) : (
         inputValue
       )}
-    </button>
+    </div>
   );
 }
