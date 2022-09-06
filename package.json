@@ -27,7 +27,7 @@
     "react-feather": "^2.0.9",
     "swr": "^1.1.2",
     "swr-firestore-v9": "^1.0.5",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "autoprefixer": "10.2.5",
